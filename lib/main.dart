@@ -5,32 +5,32 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Mhs>> fetchMhss(http.Client client) async {
+Future<List<dsn>> fetchMhss(http.Client client) async {
   final response =
-      await client.get('https://abdulrazaq1905.000webhostapp.com/readDatajson.php');
+      await client.get('https://belajarbersama17.000webhostapp.com/dsn.php');
 
   // Use the compute function to run parseMhss in a separate isolate.
   return compute(parseMhss, response.body);
 }
 
-// A function that converts a response body into a List<Mhs>.
-List<Mhs> parseMhss(String responseBody) {
+// A function that converts a response body into a List<dsn>.
+List<dsn> parseMhss(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<Mhs>((json) => Mhs.fromJson(json)).toList();
+  return parsed.map<dsn>((json) => dsn.fromJson(json)).toList();
 }
 
-class Mhs {
+class dsn {
   final String nidn;
-  final String nama_dosen ;
-  final String jenjang_akademik ;
+  final String nama_dosen;
+  final String jenjang_akademik;
   final String pendidikan_terakhir;
-  final String home_base ;
+  final String home_base;
 
-  Mhs({this.nidn, this.nama_dosen , this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
+  dsn({this.nidn, this.nama_dosen, this.jenjang_akademik, this.pendidikan_terakhir, this.home_base});
 
-  factory Mhs.fromJson(Map<String, dynamic> json) {
-    return Mhs(
+  factory dsn.fromJson(Map<String, dynamic> json) {
+    return dsn(
       nidn: json['nidn'] as String,
       nama_dosen: json['nama_dosen'] as String,
       jenjang_akademik: json['jenjang_akademik'] as String,
@@ -45,7 +45,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Nama Dosen';
+    final appTitle = 'Data Dosen Bina Darma';
 
     return MaterialApp(
       title: appTitle,
@@ -65,7 +65,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: FutureBuilder<List<Mhs>>(
+      body: FutureBuilder<List<dsn>>(
         future: fetchMhss(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
@@ -80,7 +80,7 @@ class MyHomePage extends StatelessWidget {
 }
 
 class MhssList extends StatelessWidget {
-  final List<Mhs> MhsData;
+  final List<dsn> MhsData;
 
   MhssList({Key key, this.MhsData}) : super(key: key);
 
@@ -89,13 +89,13 @@ class MhssList extends StatelessWidget {
 Widget viewData(var data,int index)
 {
 return Container(
-    width: 200,
+    width: 350,
     child: Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      color: Colors.green,
-      elevation: 10,
+      color: Colors.red,
+      elevation: 15,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -117,8 +117,15 @@ return Container(
            //leading: Image.network(
              //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
              // ),
-            title: Text(data[index].nim, style: TextStyle(color: Colors.white)),
-            subtitle: Text(data[index].nama, style: TextStyle(color: Colors.white)),
+            title: Text(data[index].nidn, style: TextStyle(color: Colors.white)),
+            subtitle: Text(data[index].nama_dosen, style: TextStyle(color: Colors.white)),
+          ),
+          ListTile(
+           //leading: Image.network(
+             //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
+             // ),
+            title: Text(data[index].jenjang_akademik, style: TextStyle(color: Colors.white)),
+            subtitle: Text(data[index].home_base, style: TextStyle(color: Colors.white)),
           ),
           ButtonTheme.bar(
             child: ButtonBar(
@@ -139,6 +146,8 @@ return Container(
     ),
   );
 }
+
+
 
   @override
   Widget build(BuildContext context) {
